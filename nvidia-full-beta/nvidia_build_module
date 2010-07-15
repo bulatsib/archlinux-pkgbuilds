@@ -1,0 +1,10 @@
+#!/bin/sh
+echo "Building NVIDIA module for `uname -sr`"
+KERNVER=`uname -r`
+rm -f /lib/modules/$KERNVER/kernel/drivers/video/nvidia.ko
+cd /usr/src/nv
+ln -s Makefile.kbuild Makefile
+make SYSSRC=/lib/modules/$KERNVER/build module || return 1
+install -m644 nvidia.ko /lib/modules/$KERNVER/kernel/drivers/video/
+depmod
+make clean
